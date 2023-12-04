@@ -3,7 +3,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // logedInUser: JSON.parse(localStorage.getItem("user")) || {},
   logedInUser: {},
   fireBaseUser: {},
 };

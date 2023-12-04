@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field} from "formik";
 import * as Yup from "yup";
 import { RiEdit2Line } from "react-icons/ri";
 
@@ -57,11 +57,11 @@ const Edit = () => {
                 <div className="relative mb-2">
                   <img
                     className="w-28 h-28 object-cover rounded-lg"
-                    src={
-                      artistData.profileImage instanceof File
-                        ? URL.createObjectURL(artistData.profileImage)
-                        : artistData.profileImage
-                    }
+                    // src={
+                    //   artistData.profileImage instanceof File
+                    //     ? URL.createObjectURL(artistData.profileImage)
+                    //     : artistData.profileImage
+                    // }
                     alt="Profile"
                   />
                   <label

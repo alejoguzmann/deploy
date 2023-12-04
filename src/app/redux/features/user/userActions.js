@@ -16,7 +16,6 @@ export const getUserById = (tokenId, router) => async (dispatch) => {
     });
 
     dispatch(getUser(response.data));
-    // localStorage.setItem("user", JSON.stringify(response.data));
   } catch (error) {
     if (router) {
       router.replace("/auth/register");
@@ -27,7 +26,6 @@ export const getUserById = (tokenId, router) => async (dispatch) => {
 export const logOut = () => async (dispatch) => {
   dispatch(cleanUser());
   dispatch(cleanFireBaseInfo());
-  // localStorage.setItem("user", JSON.stringify({}));
 };
 
 export const getUserInformation = (user) => async (dispatch) => {
