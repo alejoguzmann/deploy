@@ -35,7 +35,7 @@ export default function Nav() {
               </Link>
             </li>
             <li>
-            {!user.userType ? (
+            {!user.email ? (
               <Link href="/auth">
                 <span className="hover:bg-black hover:text-primary hover:border-primary p-2 rounded-lg font-newrocker text-[19px] border-[2px]  border-gray-200">Ingresar</span>
               </Link>
