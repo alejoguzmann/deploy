@@ -6,8 +6,8 @@ const obj = {
   fireBaseUser: typeof window !== "undefined"? JSON.parse(localStorage.getItem("fireBaseUser")) : {},
 }
 const initialState = {
-  logedInUser: {},
-  fireBaseUser: {},
+  logedInUser: obj.logedInUser,
+  fireBaseUser: obj.fireBaseUser,
 };
 
 // if (typeof window !== "undefined") {
