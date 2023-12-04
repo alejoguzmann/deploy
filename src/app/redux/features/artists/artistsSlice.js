@@ -9,6 +9,11 @@ const initialState = {
   timeAvailabilityExceptions: {},
 };
 
+if (typeof window !== "undefined") {
+  initialState.people = JSON.parse(localStorage.getItem("artists")) || [];
+  initialState.filtered = initialState.people;
+}
+
 export const artistsSlice = createSlice({
   name: "artist",
   initialState,

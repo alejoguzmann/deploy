@@ -17,7 +17,6 @@ export const getUserById = (tokenId, router) => async (dispatch) => {
 
     dispatch(getUser(response.data));
 
-    // Guardar en localStorage después de recibir la respuesta
     localStorage.setItem("user", JSON.stringify(response.data));
   } catch (error) {
     if (router) {
@@ -31,7 +30,6 @@ export const logOut = () => async (dispatch) => {
   dispatch(cleanUser());
   dispatch(cleanFireBaseInfo());
 
-  // Guardar objetos vacíos en localStorage
   localStorage.setItem("user", JSON.stringify({}));
   localStorage.setItem("fireBaseUser", JSON.stringify({}));
 };
@@ -39,7 +37,6 @@ export const logOut = () => async (dispatch) => {
 export const getUserInformation = (user) => async (dispatch) => {
   dispatch(getFirebaseInfo(user));
 
-  // Guardar en localStorage
   localStorage.setItem("fireBaseUser", JSON.stringify(user));
 };
 
@@ -51,8 +48,6 @@ export const bringUserPosts = (id) => async (dispatch) => {
 
     dispatch(getUserPosts(response.data));
 
-    // Guardar en localStorage si es necesario
-    // (depende de tu lógica específica)
   } catch (error) {
     console.error(error);
   }
