@@ -3,10 +3,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  logedInUser: typeof window !== "undefined"?JSON.parse(localStorage.getItem("user")) : {},
-  fireBaseUser:typeof window !== "undefined"? JSON.parse(localStorage.getItem("fireBaseUser")) : {},
+  logedInUser: {},
+  fireBaseUser: {},
 };
 
+if (typeof window !== "undefined") {
+  initialState.logedInUser = JSON.parse(localStorage.getItem("user")) || {};
+  initialState.fireBaseUser = JSON.parse(localStorage.getItem("fireBaseUser")) || {};
+}
 
 export const userSlice = createSlice({
   name: "user",
