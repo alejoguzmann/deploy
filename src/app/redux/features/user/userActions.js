@@ -20,16 +20,20 @@ export const getUserById = (tokenId, router) => async (dispatch) => {
     if (router) {
       router.replace("/auth/register");
     }
+    console.log(error)
   }
 };
 
 export const logOut = () => async (dispatch) => {
   dispatch(cleanUser());
   dispatch(cleanFireBaseInfo());
+  localStorage.setItem("user", JSON.stringify({}))
+  localStorage.setItem("fireBaseUser", JSON.stringify({}))
 };
 
 export const getUserInformation = (user) => async (dispatch) => {
   dispatch(getFirebaseInfo(user));
+  localStorage.setItem("fireBaseUser", JSON.stringify(user))
 };
 
 export const bringUserPosts = (id) => async (dispatch) => {
