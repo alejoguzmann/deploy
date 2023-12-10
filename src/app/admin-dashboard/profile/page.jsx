@@ -6,11 +6,23 @@ import { useSelector } from 'react-redux'
 import Image from 'next/image'
 //NUESTROS PERFILES
 
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 const Profile = () => {
   const user = useSelector((state) => state.user.logedInUser) // ACA TENEMOS QUE TRAER LAS CUENTAS DE ADMIN- BACK
   const imageLoader = ({src}) => {
     return src
   }
+  const router = useRouter()
+  
+  useEffect(() => {
+    if(!user.userType){
+      router.replace("/auth")
+    } else if (user.userType !== "admin"){
+      router.replace("/")
+    }
+  }, [])
   return (
     <div className='bg-secondary-100 p-8 rounded-xl w-full'>
       <h1 className='text-4xl'> Mi perfil</h1>
@@ -22,7 +34,7 @@ const Profile = () => {
           </div>
           <div className='flex-1'>
               <div className='relative mb-2'>
-                  <Image unoptimized src={user.image} loader={imageLoader} width={80} height={80} alt={`${user.name} ${user.lastName} profile pic`} />
+                  <Image unoptimized src={user.image} loader={imageLoader} width={80} height={80} alt={`${user.fullName} profile pic`} />
                   <label htmlFor='avatar' className='absolute bg-secondary-900 p-2 left-24 -top-2 rounded-full cursor-pointer hover:bg-secondary-100'>
                       <RiEdit2Line />
                   </label>

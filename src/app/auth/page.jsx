@@ -7,6 +7,7 @@ import {
   RiEyeLine,
   RiEyeOffLine,
   RiGoogleFill,
+  RiReplyLine,
 } from "react-icons/ri";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,10 +21,13 @@ import {
 } from "firebase/auth";
 import { getAllArtists } from "../redux/features/artists/artistActions.js";
 import { useDispatch, useSelector } from "react-redux";
+import { openModalLoadingAction } from "../redux/features/modalLoading/ModalLoadingActions.js";
+import { closeModalLoadingAction } from "../redux/features/modalLoading/ModalLoadingActions.js";
 import {
   getUserById,
   getUserInformation,
 } from "../redux/features/user/userActions.js";
+import { forgetPass } from "../utils/resetPassword.js";
 
 const Login = () => {
   const user = useSelector((state) => state.user.logedInUser);
@@ -33,8 +37,8 @@ const Login = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) {
-      if (user.userType == "artists") router.replace("/a-dashboard/home");
+    if (user.userType) {
+      if (user.userType == "artist") router.replace("/a-dashboard/home");
       if (user.userType == "customer") router.replace("/user-dashboard");
       if (user.userType == "admin") router.replace("/admin-dashboard/home");
     }
@@ -48,6 +52,7 @@ const Login = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(openModalLoadingAction());
     emailLogIn();
   };
 
@@ -92,30 +97,52 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, data.email, data.password);
 
       const userFireBase = auth.currentUser;
-      const token = userFireBase.reloadUserInfo.localId;
 
-      dispatch(getUserById(token));
+      dispatch(getUserById(userFireBase.uid));
 
-      if (user.userType == "customer") {
-        router.replace("/user-dashboard");
-      } else {
-        router.replace("/a-dashboard/home");
-        // }
-        //if (user.userType == "admin") router.replace("/admin-dashboard/home");
+      dispatch(
+        getUserInformation({
+          tokenId: userFireBase.uid,
+          userName: userFireBase.displayName,
+          image: userFireBase.photoURL,
+          email: userFireBase.email,
+          phoneNumber: userFireBase.phoneNumber,
+        })
+      );
+
+      
+      if (user.userType == "artist") {
+          await new Promise(resolve => {
+            router.push("/a-dashboard/home").then(() => resolve());
+          });
+          dispatch(closeModalLoadingAction());
+      }
+      if (user.userType == "customer"){
+          await new Promise(resolve => {
+            router.push("/user-dashboard").then(() => resolve());
+          });
+          dispatch(closeModalLoadingAction());
+       } 
+      if (user.userType == "admin") { 
+        await new Promise(resolve => {
+          router.push("/admin-dashboard/home").then(() => resolve());
+        });
+        dispatch(closeModalLoadingAction());
       }
     } catch (createUserError) {
+      dispatch(closeModalLoadingAction());
       toast.error("Usuario y o contraseña errónea", {
         className: "toastError",
         position: toast.POSITION.BOTTOM_CENTER,
         autoClose: 3000,
         hideProgressBar: true,
       });
-    }
+    } 
   };
 
   return (
-    <div className="bg-secondary-900/90 opacity-90 flex h-[800px] border-[1px] border-white/10  absolute rounded-3xl w-full xl:w-1/2 lg:w-1/3 md:w-1/2">
-      <div className="w-[35%] border-transparent border-r-[1px] border-r-white/10 flex flex-col items-center justify-center text-center px-8">
+    <div className="bg-secondary-900/90 opacity-90 flex h-full  border-[1px] border-white/10  absolute rounded-3xl  xl:w-1/2 lg:w-1/2 md:w-1/2  sm:w-3/4 items-start">
+      {/* <div className="w-[40%] h-80vh border-transparent border-r-[1px] border-r-white/10 flex flex-col items-center justify-center text-center px-8 ">
         <h2 className="font-rocksalt text-[40px] text-white/90 mb-2">
           Te damos la bienvenida!
         </h2>
@@ -127,8 +154,18 @@ const Login = () => {
             Registrarse
           </span>
         </Link>
-      </div>
-      <div className="flex-1 flex flex-col items-center justify-center">
+      </div> */}
+
+      <div className=" w-[40%] flex-1 flex flex-col items-center justify-center">
+        <div className="mt-4 ml-4 mb-10 ">
+          <Link
+            href="/"
+            className="flex items-center gap-x-1 hover:bg-secondary-100 rounded-lg p-2"
+          >
+            <RiReplyLine className=" " />
+            Volver al inicio
+          </Link>
+        </div>
         <h2 className="font-rocksalt text-[40px] text-white/90 mb-4">
           Inicia Sesión
         </h2>
@@ -181,7 +218,24 @@ const Login = () => {
               Ingresar
             </button>
           </div>
+          <span></span>
         </form>
+        <p
+          className="text-primary/80 mb-6 hover:text-primary cursor-pointer"
+          onClick={() => forgetPass(data.email)}
+        >
+          ¿Has olvidado tu contraseña?{" "}
+        </p>
+        <div className=" h-80vh border-transparent border-r-[1px] border-r-white/10 flex flex-col items-center justify-center text-center px-8 ">
+          <p className="text-primary/80 mb-6">
+            ¿No tenés una cuenta? Registrate GRATIS
+          </p>
+          <Link href="/auth/register">
+            <span className=" text-[17px] py-3 px-5 border-[1px] border-primary rounded-3xl text-primary cursor-pointer hover:bg-primary/90 hover:text-white transition-colors">
+              Registrarse
+            </span>
+          </Link>
+        </div>
       </div>
     </div>
   );

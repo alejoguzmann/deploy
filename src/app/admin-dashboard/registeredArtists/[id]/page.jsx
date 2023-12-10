@@ -8,17 +8,28 @@ import { CiShop } from "react-icons/ci";
 import { BsFillFilePostFill } from "react-icons/bs";
 import { VscAccount } from "react-icons/vsc";
 
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+
 const RegArtistById = ({ params }) => {
   const [artist, setArtist] = useState({ publications: [] });
+  const user = useSelector((state) => state.user.logedInUser);
+  const router = useRouter();
 
   useEffect(() => {
+    if (!user.userType) {
+      router.replace("/auth");
+    } else if (user.userType !== "admin") {
+      router.replace("/");
+    }
     axios
-      .get(`https://serverconnectink.up.railway.app/tattooArtists/${params.id}`)
+      .get(`http://localhost:3001/tattooArtists/${params.id}`)
       .then((response) => {
         setArtist(response.data);
       });
   }, [params.id]);
   console.log(artist.publications, "soyyyy");
+
 
   return (
     <div className="">

@@ -1,37 +1,38 @@
-"use client";
-
+"use client"
+import AdminTopBarStyles from "../../../components/admintopBarOptions/AdminTopBarOptions";
 import { RiAddFill } from "react-icons/ri";
-
-import React, { useState } from "react";
-import Modal from "react-modal";
+import Link from 'next/link'
+import React, { useState } from 'react';
+import Modal from 'react-modal';
 import { RiCloseFill } from "react-icons/ri";
-import { addNewStyle } from "../../../app/redux/features/styles/stylesActions";
+import { addNewStyle } from '../../../app/redux/features/styles/stylesActions';
 import { useDispatch } from "react-redux";
+
 
 export default function TattooStylesLayout({ children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newStyleName, setNewStyleName] = useState("");
+  const [newStyleName, setNewStyleName] = useState("")
   const dispatch = useDispatch();
 
   const openModal = () => {
     setIsModalOpen(true);
   };
-
+  
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
   const handleAddStyle = () => {
-    if (newStyleName.trim() !== "") {
-      console.log("Nuevo estilo a añadir:", newStyleName);
-      dispatch(addNewStyle({ name: newStyleName }));
-      closeModal();
+    if (newStyleName.trim() !== '') {
+     
+     dispatch(addNewStyle({ name: newStyleName }));
+    closeModal(); 
     }
   };
-  return (
-    <div className="bg-secondary-900 p-8 rounded-xl w-full">
+    return (
+      <div className='bg-secondary-900 p-8 rounded-xl w-full'>
       <div className="flex">
-        <h1 className="text-4xl font-rocksalt"> Estilos </h1>
+        <h1 className='text-4xl font-rocksalt'> Estilos </h1>
         <div className="ml-auto">
           <button
             className="hover:bg-white hover:text-black flex items-center gap-1 border-gray-300 text-gray-300 border-[1px] px-2 py-3 rounded-md cursor-pointer"
@@ -42,10 +43,11 @@ export default function TattooStylesLayout({ children }) {
           </button>
         </div>
       </div>
-      <hr className="my-8 border-gray-500" />
+      <hr className='my-8 border-gray-500'/>
       {/* <AdminTopBarStyles /> */}
       {children}
 
+     
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
