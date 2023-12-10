@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RiAlertFill, RiCloseFill, RiCheckFill } from "react-icons/ri";
-import { closeModalDeleteAppointmentAction } from '@/app/redux/features/modalDeleteAppointment/modalDeleteAppointmentAction';
+import { closeModalDeleteAppointmentAction } from '../../app/redux/features/modalDeleteAppointment/modalDeleteAppointmentAction';
 import axios from 'axios';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ModalDeleteAppointment = () => {
     const dispatch = useDispatch();
-    const URL_BASE = "http://localhost:3001"
+    const URL_BASE = "https://serverconnectink.up.railway.app"
     const [id, setId] = useState('');
     const {isOpen,data} = useSelector((state) => state.modalDeleteAppointment);
 

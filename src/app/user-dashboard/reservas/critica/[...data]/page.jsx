@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import { validationSchema } from "./validationSchema";
 import { useState } from "react";
 import ReactStars from "react-stars";
-import { uploadImage } from "../../../../app/utils/uploadImage";
+import { uploadImage } from "../../../../../app/utils/uploadImage";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -48,7 +48,7 @@ const Critica = ({params}) => {
                 appointmentId,
                 tattooArtistId
               }
-              const response = await axios.post("http://localhost:3001/reviews", data)
+              const response = await axios.post("https://serverconnectink.up.railway.app/reviews", data)
               console.log(response)
               setSent(true);
             } catch (error) {

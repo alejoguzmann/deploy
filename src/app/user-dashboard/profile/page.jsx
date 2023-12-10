@@ -6,7 +6,7 @@ import Image from "next/image";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { bringUserInformation } from "@/app/redux/features/user/userActions";
+import { bringUserInformation } from "../../../app/redux/features/user/userActions";
 import axios from "axios";
 
 const UProfile = () => {
@@ -53,7 +53,7 @@ const UProfile = () => {
     }
     try {
       const response = await axios.put(
-        `http://localhost:3001/customers/${user.id}`,
+        `https://serverconnectink.up.railway.app/customers/${user.id}`,
         formData
       );
 

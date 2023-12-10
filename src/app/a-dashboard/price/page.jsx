@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 const Price = () => {
   // const dispatch = useDispatch();
   const user = useSelector((state) => state.user.logedInUser);
-  const URL_BASE = "http://localhost:3001";
+  const URL_BASE = "https://serverconnectink.up.railway.app";
 
   let errorIndicator = false
   const router = useRouter();
@@ -144,7 +144,6 @@ const Price = () => {
   };
 
   const createPrice = async (data) => {
-    console.log(data, "LCDTM");
     try {
       await axios.post(`${URL_BASE}/priceRanges`, data);
    

@@ -6,11 +6,13 @@ import Image from 'next/image'
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
-import { bringUserInformation } from "@/app/redux/features/user/userActions";
+import { bringUserInformation } from "../../../app/redux/features/user/userActions";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 
 const Profile = () => {
+
+  const [showPassword, setShowPassword] = useState(false); // Agrega esta línea
 
 const dispatch = useDispatch()
 
@@ -68,7 +70,7 @@ const handleUpdate = async (e) => {
 
   try {
     const response = await axios.put(
-      `http://localhost:3001/tattooArtists/${user.id}`,
+      `https://serverconnectink.up.railway.app/tattooArtists/${user.id}`,
       formData
     );
 

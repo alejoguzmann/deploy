@@ -24,8 +24,6 @@ export default function Appointments() {
 
   useEffect(() => {}, [user]);
 
-  console.log(user, "holaaa");
-
   return (
     <div className="">
       {appointment && appointment.length > 0 ? (

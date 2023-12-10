@@ -1,3 +1,4 @@
+'use client'
 
 import ArtistPost from '../../../../components/artistPost/artistPost'
 import React from "react";
