@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Formik, Form, Field} from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { RiEdit2Line } from "react-icons/ri";
 
@@ -21,16 +21,28 @@ const Edit = () => {
     address: "AAA, Av. Maipú 2001, B1636 Olivos, Provincia de Buenos Aires",
     location: "Argentina",
     shopName: "Tattoos La casta",
-    profileImage:
-      "https://elcomercio.pe/resizer/Nk5gbJwG_w5n5tk9fd-Fu_RaJS8=/1200x900/smart/filters:format(jpeg):quality(75)/cloudfront-us-east-1.images.arcpublishing.com/elcomercio/UNWTCT67INFF7BCND5UVRFQYIQ.webp",
+    profileImage: {
+      file: null,
+      preview:
+        "https://elcomercio.pe/resizer/Nk5gbJwG_w5n5tk9fd-Fu_RaJS8=/1200x900/smart/filters:format(jpeg):quality(75)/cloudfront-us-east-1.images.arcpublishing.com/elcomercio/UNWTCT67INFF7BCND5UVRFQYIQ.webp",
+    },
   });
 
   const handleImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setArtistData({
-        ...artistData,
-        profileImage: event.target.files[0],
-      });
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setArtistData({
+          ...artistData,
+          profileImage: {
+            file: event.target.files[0],
+            preview: reader.result,
+          },
+        });
+      };
+
+      reader.readAsDataURL(event.target.files[0]);
     }
   };
 
@@ -44,7 +56,6 @@ const Edit = () => {
         onSubmit={(values, { setSubmitting }) => {
           setArtistData(values);
           setSubmitting(false);
-          console.log("Updated Data", values);
         }}
       >
         {({ setFieldValue }) => (
@@ -57,31 +68,31 @@ const Edit = () => {
                 <div className="relative mb-2">
                   <img
                     className="w-28 h-28 object-cover rounded-lg"
-                    // src={
-                    //   artistData.profileImage instanceof File
-                    //     ? URL.createObjectURL(artistData.profileImage)
-                    //     : artistData.profileImage
-                    // }
+                    src={artistData.profileImage.preview}
                     alt="Profile"
                   />
-                  <label
-                    htmlFor="avatar"
-                    className="absolute bg-secondary-900 p-2 left-24 -top-2 rounded-full cursor-pointer hover:bg-secondary-100"
-                  >
-                    <RiEdit2Line />
-                  </label>
-                  <input
-                    type="file"
-                    id="avatar"
-                    className="hidden"
-                    onChange={(event) => {
-                      handleImageChange(event);
-                      setFieldValue(
-                        "profileImage",
-                        event.currentTarget.files[0]
-                      );
-                    }}
-                  />
+                  {typeof window !== 'undefined' && (
+                    <>
+                      <label
+                        htmlFor="avatar"
+                        className="absolute bg-secondary-900 p-2 left-24 -top-2 rounded-full cursor-pointer hover:bg-secondary-100"
+                      >
+                        <RiEdit2Line />
+                      </label>
+                      <input
+                        type="file"
+                        id="avatar"
+                        className="hidden"
+                        onChange={(event) => {
+                          handleImageChange(event);
+                          setFieldValue(
+                            "profileImage",
+                            event.currentTarget.files[0]
+                          );
+                        }}
+                      />
+                    </>
+                  )}
                 </div>
                 <p className="text-gray-500 text-sm">
                   Extensiones permitidas: png, jpg, jpeg

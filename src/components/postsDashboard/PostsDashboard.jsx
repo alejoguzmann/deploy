@@ -1,25 +1,35 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import PostDashboard from "../postDashboard/PostDashboard";
 import { useSelector, useDispatch } from "react-redux";
-import { bringUserPosts } from "@/app/redux/features/user/userActions";
+import { bringUserPosts } from "../../app/redux/features/user/userActions";
 
 const PostsDashboard = () => {
 
   const user = useSelector((state) => state.user.logedInUser);
-  const modalCreate = useSelector((state) => state.modalCreate);
+  const isOpenmodalCreate = useSelector((state) => state.modalCreate.isOpen);
+  const isOpenModalDelete = useSelector((state) => state.modalDelete.isOpen);
+  const isOpenModalEditar = useSelector((state) => state.modalEdit.isOpen);
+  const isOpenModaLoading = useSelector((state) => state.modalLoading.isOpen);
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(bringUserPosts(user.id))
-  }, [modalCreate])
+  }, [isOpenmodalCreate, isOpenModalDelete, isOpenModalEditar])
 
+  const filteredSortedPublications = useMemo(() => {
+    return (
+      user?.publications
+        ?.filter((post) => !post.disabled)
+        ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) || []
+    );
+  }, [user?.publications]);
 
   return (
     <div className="flex flex-col items-center w-full ">
-      {user?.publications?.length > 0 ? (
-        user.publications.map((publication) => (
+      {filteredSortedPublications.length > 0 ? (
+        filteredSortedPublications.map((publication) => (
           <PostDashboard
             key={publication.id}
             publication={publication}

@@ -1,25 +1,37 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import PostCards from "../../components/postCards/PostCards";
+import { getAllPosts } from "../redux/features/posts/postsActions";
 import axios from "axios";
 import { orderPosts } from "../utils/ordenarPosts";
 import UserPostDash from "../../components/userPostDash/UserPostDash";
+import { useRouter } from "next/navigation";
+import { getUserById } from "../redux/features/user/userActions";
 
 function UDashboard() {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
+  const router = useRouter()
 
-  // const user = useSelector((state) => state.user.logedInUser)
+  const user = useSelector((state) => state.user.logedInUser);
+const fireBaseUser = useSelector((state) => state.user.fireBaseUser)
+
+
+useEffect (() => {
+dispatch(getUserById(fireBaseUser.tokenId))
+},[])
 
   useEffect(() => {
+    if(!user.userType){
+      router.replace("/auth")
+    } else if(user.userType !== "customer"){
+      router.replace("/")
+    }
     const fetchData = async () => {
       try {
-        const artists = (
-          await axios.get(
-            "https://serverconnectink.up.railway.app/tattooArtists"
-          )
-        ).data;
+        const artists = (await axios.get("https://serverconnectink.up.railway.app/tattooArtists"))
+          .data;
         let allPosts = [];
 
         artists.forEach((artist) => {

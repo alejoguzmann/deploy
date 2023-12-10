@@ -1,5 +1,5 @@
 import React from "react";
-import { uploadImage } from "@/app/utils/uploadImage";
+import { uploadImage } from '../../app/utils/uploadImage';
 import { Formik, Form, Field, ErrorMessage, useField } from "formik";
 
 import { validationSchemaClient } from "../customerRegister/validationSchemaCliente";
@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserById } from "@/app/redux/features/user/userActions";
+import { getUserById, getUserInformation } from "../../app/redux/features/user/userActions"
 import {
   RiMailLine,
   RiLock2Line,
@@ -68,29 +68,44 @@ const CustomerRegister = () => {
                 "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg";
             }
 
-            if (!values.userName) {
-              values.tokenId = await emailSignUp(values.email, values.password);
-            }
-
-            const response = await axios.post(`${urlBase}/customers`, values);
-
-            toast.success(
-              `
-                ${values.fullName} se ha registrado existosamente`,
-              {
-                className: "toastSuccess",
-                position: toast.POSITION.BOTTOM_RIGHT,
-                autoClose: 3000,
-                hideProgressBar: true,
+              if(!values.userName){
+                values.tokenId = await emailSignUp(values.email, values.password);
               }
-            );
-            const userFireBase = auth.currentUser;
-            const token = userFireBase.reloadUserInfo.localId;
-            dispatch(getUserById(token));
-            router.replace("/user-dashboard/home");
-          } catch (error) {
-            console.error("Error during form submission", error);
-          }
+            
+              const response = await axios.post(`${urlBase}/customers`, values);
+              
+              toast.success(`
+                ${values.fullName} se ha registrado existosamente`,
+                {
+                  className: "toastSuccess",
+                  position: toast.POSITION.BOTTOM_RIGHT,
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                }
+              );
+
+              await axios.post(`${urlBase}/nodemailer/welcome`, {
+                email: values.email,
+                name: values.fullName,
+              });
+
+              const userFireBase = auth.currentUser;
+              const token = userFireBase.reloadUserInfo.localId;
+
+              dispatch(getUserById(token));
+              dispatch(
+                getUserInformation({
+                  tokenId: userFireBase.uid,
+                  userName: userFireBase.displayName,
+                  image: userFireBase.photoURL,
+                  email: userFireBase.email,
+                  phoneNumber: userFireBase.phoneNumber,
+                })
+              )
+              router.replace("/user-dashboard");
+            } catch (error) {
+              console.error("Error during form submission", error);
+            }
           setSubmitting(false);
         }}
       >
