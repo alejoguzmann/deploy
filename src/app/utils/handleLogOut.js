@@ -10,6 +10,7 @@
 // const dispatch = useDispatch();
 
 // export const handleLogOut = async () => {
+//   console.log("Cerrar sesión");
 
 //   try {
 //     await signOut(auth);

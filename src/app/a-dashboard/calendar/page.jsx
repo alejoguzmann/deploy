@@ -9,6 +9,9 @@ import { TbPointFilled } from "react-icons/tb";
 
 import { useRouter } from "next/navigation";
 
+import { notifyError } from "../../../components/notifyError/NotifyError";
+
+
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -34,6 +37,8 @@ const Page = () => {
   const [showHours, setShowHours] = useState({});
   const [moreTime, setMoreTime] = useState({});
   const [moreExceptionTime, setMoreExceptionTime] = useState(false);
+
+  console.log(user.logedInUser.userType);
 
   useEffect(() => {
     // if (!user.userType) {
@@ -94,7 +99,7 @@ const Page = () => {
 
   const generateSecondTimeOptions = (day) => {
     let options = [];
-    let initial = dayObj[day]?.finalHour.split(":")[0];
+    let initial = dayObj[day]?.finalHour?.split(":")[0];
     let final = 23;
 
     for (let i = initial; i <= final; i++) {
@@ -266,7 +271,7 @@ const Page = () => {
       }
       dispatch(getUserById(user.fireBaseUser.tokenId));
     } catch (error) {
-      console.error("Error al guardar el horario:", error);
+      notifyError("Error al guardar el horario:", error);
     }
   };
 
@@ -532,7 +537,7 @@ const Page = () => {
         <div className="flex items-center justify-center mt-8 mr-6">
         <button
           onClick={addTimeException}
-          className="ml-6 hover:scale-105 transition-transform border-[1px] border-artist/60 hover:border-artist hover:bg-artist/60 hover:text-secondary-900 rounded mb-6 p-2"
+          className="ml-6 hover:scale-105 transition-transform border-[1px] border-artist/60 hover:border-artist hover:bg-artist/60  rounded mb-6 p-2"
           disabled={
             !newException.initialHour ||
             (!newException.finalHour &&

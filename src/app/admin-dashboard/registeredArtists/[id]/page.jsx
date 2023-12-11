@@ -28,6 +28,8 @@ const RegArtistById = ({ params }) => {
         setArtist(response.data);
       });
   }, [params.id]);
+  console.log(artist.publications, "soyyyy");
+
 
   return (
     <div className="">

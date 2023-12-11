@@ -75,7 +75,7 @@ const Price = () => {
           }));
         }
       } catch (error) {
-        console.error(error);
+        notifyError(error);
       }
     };
 
@@ -138,12 +138,13 @@ const Price = () => {
     try {
       await axios.put(`${URL_BASE}/priceRanges/${data.priceRangeId}`, data);
        } catch (error) {
-      console.error(error);
+      notifyError(error);
       errorIndicator = true
     }
   };
 
   const createPrice = async (data) => {
+    console.log(data, "LCDTM");
     try {
       await axios.post(`${URL_BASE}/priceRanges`, data);
    
@@ -174,7 +175,7 @@ const Price = () => {
                         onChange={(event) =>
                           handleInputChange(size, "priceMin", event.target.value)
                         }
-                        className="w-full py-3 px-4 outline-none rounded-lg bg-secondary-900 shadow-md shadow-primary/60 "
+                        className="w-full py-3 px-4 outline-none rounded-lg bg-secondary-900 shadow-md shadow-artist/60 "
                       />
                     </div>
                     <p className="font-rocksalt"> $ </p>
@@ -187,7 +188,7 @@ const Price = () => {
                           onChange={(event) =>
                             handleInputChange(size, "priceMax", event.target.value)
                           }
-                          className="w-full py-3 px-4 outline-none rounded-lg bg-secondary-900 shadow-md shadow-primary/60 "
+                          className="w-full py-3 px-4 outline-none rounded-lg bg-secondary-900 shadow-md shadow-artist/60 "
                         />
                         </div>
                       </div>
@@ -204,7 +205,7 @@ const Price = () => {
         <div className="flex justify-center mt-8">
         <button
           type="submit"
-          className="hover:bg-primary font-rocksalt hover:text-black flex items-center justify-center gap-1 border-primary text-gray-300 border-[1px] px-2 py-3 rounded-md cursor-pointer"
+          className="hover:bg-artist font-rocksalt  flex items-center justify-center gap-1 border-artist text-gray-300 border-[1px] px-2 py-3 rounded-md cursor-pointer"
                  
         >
           Guardar Precios
