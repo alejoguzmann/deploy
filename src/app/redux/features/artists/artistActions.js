@@ -117,6 +117,7 @@ export const CleanArtist = () => async (dispatch) => {
 //   export const getTimeExceptions = (id) => async (dispatch) => {
 //     try {
 //       const response = await axios.get(`${URL_BASE}/tattooArtists/${id}`);
+//       console.log(response.data.timeAvailabilityExceptions)
 //       dispatch(
 //         setTimeAvailabilityExceptions({
 //           userId: id,

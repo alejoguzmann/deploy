@@ -12,6 +12,7 @@ const PostsDashboard = () => {
   const isOpenModalDelete = useSelector((state) => state.modalDelete.isOpen);
   const isOpenModalEditar = useSelector((state) => state.modalEdit.isOpen);
   const isOpenModaLoading = useSelector((state) => state.modalLoading.isOpen);
+  console.log(isOpenModaLoading);
   const dispatch = useDispatch()
 
   useEffect(() => {
