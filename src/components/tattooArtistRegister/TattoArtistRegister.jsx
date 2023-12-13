@@ -14,16 +14,8 @@ import {
   getUserInformation,
 } from "../../app/redux/features/user/userActions";
 
-import {
-  RiMailLine,
-  RiLock2Line,
-  RiUserLine,
-  RiPhoneFill,
-  RiLockLine,
-  RiEyeLine,
-  RiEyeOffLine,
-  RiGoogleFill,
-} from "react-icons";
+import { RiMailLine, RiLock2Line, RiUserLine, RiLockLine, RiEyeLine, RiEyeOffLine, RiGoogleFill, RiPhoneFill } from "react-icons/ri";
+
 
 const TattoArtistRegister = () => {
   const styles = useSelector((state) => state.styles.names);
