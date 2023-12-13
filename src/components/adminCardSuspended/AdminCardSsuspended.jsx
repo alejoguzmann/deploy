@@ -40,7 +40,7 @@ export default function AdminCardSuspended({
  
   const handleBanneados = () => {
     dispatch(openModalDisabledArtistAction(id));
-    axios.post("http://localhost:3001/nodemailer/restoreAccount", {email})
+    axios.post("https://serverconnectink.up.railway.app/nodemailer/restoreAccount", {email})
   };
 
   useEffect(() => {

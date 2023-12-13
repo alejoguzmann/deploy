@@ -70,7 +70,7 @@ const Critica = ({ params }) => {
               };
               console.log(data, "holiei");
               const response = await axios.post(
-                "http://localhost:3001/reviews",
+                "https://serverconnectink.up.railway.app/reviews",
                 data
               );
               console.log(response);

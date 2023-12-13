@@ -35,7 +35,7 @@ const AdminPostDashboard = ({publication, name, image, email}) => {
 
     const handleDelete = () => {
         dispatch(openModalDeleteAction(publication))
-        axios.post("http://localhost:3001/nodemailer/deletePublication", {email})
+        axios.post("https://serverconnectink.up.railway.app/nodemailer/deletePublication", {email})
         
     }
 

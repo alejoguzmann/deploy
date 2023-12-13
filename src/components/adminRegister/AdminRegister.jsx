@@ -24,7 +24,7 @@ import {
 const AdminRegister = () => {
   const userInformation = useSelector((state) => state.user.fireBaseUser);
   const dispatch = useDispatch();
-  const urlBase = "http://localhost:3001";
+  const urlBase = "https://serverconnectink.up.railway.app";
   const router = useRouter();
 
   useEffect(() => {}, []);

@@ -41,7 +41,7 @@ const ArtistBookingCard = ({id, bodyPlace, description, duration, image, size, d
       
     const artistId = async ()=>{
        try {
-        const resp = (await axios.get(`http://localhost:3001/customers/${CustomerId}`)).data
+        const resp = (await axios.get(`https://serverconnectink.up.railway.app/customers/${CustomerId}`)).data
         setResponse(resp)
        } catch (error) {
         notifyError("error");
@@ -56,7 +56,7 @@ const ArtistBookingCard = ({id, bodyPlace, description, duration, image, size, d
     const handleCancelation = async () => {
         dispatch(openModalDeleteAppointmentAction(id))
 
-        const customer = (await axios(`http://localhost:3001/customers/${CustomerId}`)).data
+        const customer = (await axios(`https://serverconnectink.up.railway.app/customers/${CustomerId}`)).data
 
         const year = new Date(dateAndTime).getFullYear()
         const month = new Date(dateAndTime).getMonth() + 1
@@ -73,7 +73,7 @@ const ArtistBookingCard = ({id, bodyPlace, description, duration, image, size, d
             depositPrice
         }
 
-        await axios.post("http://localhost:3001/nodemailer/cancelDate", data)
+        await axios.post("https://serverconnectink.up.railway.app/nodemailer/cancelDate", data)
        
     }
 
