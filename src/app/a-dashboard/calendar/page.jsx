@@ -273,8 +273,13 @@ const Page = () => {
               finalHour,
             };
           }
-
-          await axios.post(`${URL_BASE}/timeAvailabilities`, data);
+          try {
+            await axios.post(`${URL_BASE}/timeAvailabilities`, data);
+            
+          } catch (error) {
+            console.log(error);
+            
+          }
         }
       }
       dispatch(getUserById(user.fireBaseUser.tokenId));
