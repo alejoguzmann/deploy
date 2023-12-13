@@ -137,6 +137,7 @@ const Login = () => {
             autoClose: 3000,
             hideProgressBar: true,
           });
+          console.log(error);
           dispatch(closeModalLoadingAction());
           dispatch(logOut());
         });
