@@ -31,7 +31,7 @@ function UDashboard() {
     }
     const fetchData = async () => {
       try {
-        const artists = (await axios.get("https://serverconnectink.up.railway.app/tattooArtists"))
+        const artists = (await axios.get("http://localhost:3001/tattooArtists"))
           .data;
         let allPosts = [];
 

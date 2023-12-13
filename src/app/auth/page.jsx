@@ -41,7 +41,7 @@ const Login = () => {
     if (user.userType) {
       if (user.userType == "artist") router.replace("/a-dashboard/home");
       if (user.userType == "customer") router.replace("/user-dashboard");
-      if (user.userType == "admin") router.replace("/admin-dashboard/home");
+      if (user.userType == "admin") router.replace("/admin-dashboard/");
     }
   }, [user]);
 
@@ -125,24 +125,24 @@ const Login = () => {
           }
           if (user.userType == "admin") {
             await new Promise((resolve) => {
-              router.push("/admin-dashboard/home").then(() => resolve());
+              router.push("/admin-dashboard/").then(() => resolve());
             });
             dispatch(closeModalLoadingAction());
           }
         })
         .catch((error) => {
-          toast.error("Cuenta baneada por basuraaaaaa", {
+          toast.error("Tu cuenta ha sido suspendida", {
             className: "toastError",
             position: toast.POSITION.BOTTOM_CENTER,
             autoClose: 3000,
             hideProgressBar: true,
           });
           dispatch(closeModalLoadingAction());
-          dispatch(logOut())
+          dispatch(logOut());
         });
     } catch (createUserError) {
       dispatch(closeModalLoadingAction());
-      toast.error("Usuario y o contraseña errónea", {
+      toast.error("Usuario y/o contraseña errónea", {
         className: "toastError",
         position: toast.POSITION.BOTTOM_CENTER,
         autoClose: 3000,

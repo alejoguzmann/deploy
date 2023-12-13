@@ -1,5 +1,5 @@
-import React from "react";
-import { uploadImage } from '../../app/utils/uploadImage';
+import React, { useEffect, useState } from "react";
+import { uploadImage } from "../../app/utils/uploadImage";
 import { Formik, Form, Field, ErrorMessage, useField } from "formik";
 import { notifyError } from "../../components/notifyError/NotifyError";
 
@@ -9,7 +9,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserById, getUserInformation } from "../../app/redux/features/user/userActions"
+import {
+  getUserById,
+  getUserInformation,
+} from "../../app/redux/features/user/userActions";
 import {
   RiMailLine,
   RiLock2Line,
@@ -23,10 +26,15 @@ import {
 import { auth } from "../../firebase";
 
 const CustomerRegister = () => {
-  const urlBase = "https://serverconnectink.up.railway.app";
+  const urlBase = "http://localhost:3001";
   const router = useRouter();
   const dispatch = useDispatch();
   const userInformation = useSelector((state) => state.user.fireBaseUser);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
 
   const MyCheckbox = ({ children, ...props }) => {
     const [field, meta] = useField({ ...props, type: "checkbox" });
@@ -43,7 +51,7 @@ const CustomerRegister = () => {
     );
   };
 
-  return (
+  return loaded ? (
     <div className="w-[70%]">
       <Formik
         initialValues={{
@@ -69,44 +77,45 @@ const CustomerRegister = () => {
                 "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg";
             }
 
-              if(!values.userName){
-                values.tokenId = await emailSignUp(values.email, values.password);
-              }
-            
-              const response = await axios.post(`${urlBase}/customers`, values);
-              
-              toast.success(`
-                ${values.fullName} se ha registrado existosamente`,
-                {
-                  className: "toastSuccess",
-                  position: toast.POSITION.BOTTOM_RIGHT,
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                }
-              );
-
-              await axios.post(`${urlBase}/nodemailer/welcome`, {
-                email: values.email,
-                name: values.fullName,
-              });
-
-              const userFireBase = auth.currentUser;
-              const token = userFireBase.reloadUserInfo.localId;
-
-              dispatch(getUserById(token));
-              dispatch(
-                getUserInformation({
-                  tokenId: userFireBase.uid,
-                  userName: userFireBase.displayName,
-                  image: userFireBase.photoURL,
-                  email: userFireBase.email,
-                  phoneNumber: userFireBase.phoneNumber,
-                })
-              )
-              router.replace("/user-dashboard");
-            } catch (error) {
-              notifyError("Error during form submission", error);
+            if (!values.userName) {
+              values.tokenId = await emailSignUp(values.email, values.password);
             }
+
+            const response = await axios.post(`${urlBase}/customers`, values);
+
+            toast.success(
+              `
+                ${values.fullName} se ha registrado existosamente`,
+              {
+                className: "toastSuccess",
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+                hideProgressBar: true,
+              }
+            );
+
+            await axios.post(`${urlBase}/nodemailer/welcomeCustomer`, {
+              email: values.email,
+              name: values.fullName,
+            });
+
+            const userFireBase = auth.currentUser;
+            const token = userFireBase.reloadUserInfo.localId;
+
+            dispatch(getUserById(token));
+            dispatch(
+              getUserInformation({
+                tokenId: userFireBase.uid,
+                userName: userFireBase.displayName,
+                image: userFireBase.photoURL,
+                email: userFireBase.email,
+                phoneNumber: userFireBase.phoneNumber,
+              })
+            );
+            router.replace("/user-dashboard");
+          } catch (error) {
+            notifyError("Error during form submission", error);
+          }
           setSubmitting(false);
         }}
       >
@@ -123,6 +132,7 @@ const CustomerRegister = () => {
                   setFieldValue("image", event.currentTarget.files[0]);
                 }}
                 className="p-2 mb-3 shadow-md block w-full"
+                accept="image/png, image/jpeg"
               />
               {values.image && (
                 <button
@@ -237,6 +247,8 @@ const CustomerRegister = () => {
         )}
       </Formik>
     </div>
+  ) : (
+    <></>
   );
 };
 

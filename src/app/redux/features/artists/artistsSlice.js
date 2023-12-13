@@ -5,7 +5,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   people: [],
   filtered: [],
-  detail: {}
+  detail: {},
+  disabled: [],
 };
 
 export const artistsSlice = createSlice({
@@ -27,6 +28,11 @@ export const artistsSlice = createSlice({
         (artist) => artist.id !== deletedId
       );
     },
+
+    disabledArtists: (state, action) => {
+      state.disabled = action.payload;
+    },
+
     orderArtist: (state, action) => {
       switch (action.payload) {
         case "asc":
@@ -39,34 +45,37 @@ export const artistsSlice = createSlice({
             b.fullName.localeCompare(a.fullName)
           );
           break;
-        ;
       }
     },
 
     orderArtistRating: (state, action) => {
-      let reviewedArtists = state.filtered.filter((artist) => artist.reviews?.length != 0);
-      let sortedArtists;
+      const filterdCopy = state.filtered;
+      let reviewedArtists = state.filtered.map((artist) => ({
+        ...artist,
+        averageRating: artist.reviews?.length
+          ? artist.reviews.reduce((acc, review) => acc + review.rating, 0) /
+            artist.reviews.length
+          : 0,
+      }));
+
       switch (action.payload) {
         case "asc":
-          sortedArtists = [...reviewedArtists].sort((a, b) =>
-            a.reviews?.rating - b.reviews?.rating
-        
-          );
+          reviewedArtists.sort((a, b) => a.averageRating - b.averageRating);
           break;
         case "desc":
-          sortedArtists = [...reviewedArtists].sort((a, b) =>
-            b.reviews?.rating - a.reviews?.rating
-          );
+          reviewedArtists.sort((a, b) => b.averageRating - a.averageRating);
+
           break;
-          default:
-      sortedArtists = [...reviewedArtists];
-  }
+        case "reset":
+          return {
+            ...state,
+            filtered: filterdCopy,
+          };
+          break;
+      }
 
-  state.filtered = sortedArtists;
-        
-      
+      state.filtered = reviewedArtists;
     },
-
 
     orderAndFilterArtists: (state, action) => {
       const { filters, sortCriteria } = action.payload;
@@ -118,59 +127,17 @@ export const artistsSlice = createSlice({
 
     /*MANEJO DE LA DISPONIBILIDAD HORARIA*/
 
-    getDetail: (state, action) =>{
-      state.detail = action.payload
+    getDetail: (state, action) => {
+      state.detail = action.payload;
     },
 
     cleanDetail: (state) => {
-      state.detail = {}
+      state.detail = {};
     },
-
-    // setTimeAvailabilities: (state, action) => {
-    //   const { id, availabilities } = action.payload;
-    //   state.timeAvailabilities[id] = availabilities;
-    // },
-
-    // updateTimeAvailability: (state, action) => {
-    //   const { id, initialHour, finalHour } = action.payload;
-    //   const artistId = Object.keys(state.timeAvailabilities).find((key) =>
-    //     state.timeAvailabilities[key].some(
-    //       (availability) => availability.id === id
-    //     )
-    //   );
-
-    //   if (artistId) {
-    //     const availabilityIndex = state.timeAvailabilities[artistId].findIndex(
-    //       (availability) => availability.id === id
-    //     );
-
-    //     if (availabilityIndex !== -1) {
-    //       state.timeAvailabilities[artistId][availabilityIndex] = {
-    //         ...state.timeAvailabilities[artistId][availabilityIndex],
-    //         initialHour,
-    //         finalHour,
-    //       };
-    //     }
-    //   }
-    // },
-
-    // addTimeAvailabilityExceptions: (state, action) => {
-    //   state.timeAvailabilityExceptions = action.payload;
-    // },
-
-    // setTimeAvailabilityExceptions: (state, action) => {
-    //   const { userId, exceptions } = action.payload;
-    //   state.timeAvailabilityExceptions[userId] = exceptions;
-    // },
   },
 });
 
-
 export const {
-  // addTimeAvailabilityExceptions,
-  // setTimeAvailabilityExceptions,
-  // updateTimeAvailability,
-  // setTimeAvailabilities,
   getArtists,
   filterArtist,
   orderArtist,
@@ -179,6 +146,7 @@ export const {
   getDetail,
   cleanDetail,
   orderArtistRating,
+  disabledArtists,
 } = artistsSlice.actions;
 
 export default artistsSlice.reducer;

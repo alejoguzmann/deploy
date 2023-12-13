@@ -35,7 +35,7 @@ const ModalCreate = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await axios.post("https://serverconnectink.up.railway.app/publications", {
+        const response = await axios.post("http://localhost:3001/publications", {
             image,
             description,
             tattooArtistId:artist.id,
@@ -114,7 +114,9 @@ const ModalCreate = () => {
                             <div className='flex justify-between w-full'>
                                     <div className='flex gap-x-2 p-2 items-center'>
                                         <div className='rounded-full w-[32px] h-[32px] overflow-hidden'>
+                                            {artist.image && 
                                             <Image unoptimized loader={imageLoader} src={artist.image} height={32} width={32} alt={artist.fullName} style={{width:'100%', height:'100%' }}/>
+                                            }
                                         </div>
                                         <span className='text-[15px] text-artistfont'>{`${artist.fullName}`}</span>
                                     </div>
