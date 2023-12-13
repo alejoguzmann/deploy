@@ -13,11 +13,20 @@ import {
   RiArrowRightSLine,
   RiMenuFill,
   RiCloseFill,
-  RiBookletLine
+  RiBookletLine,
+  RiMessage2Fill,
 } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../app/redux/features/user/userActions";
+import { closeModalLoadingAction } from "../../app/redux/features/modalLoading/ModalLoadingActions";
 
 const SideBar = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logOut());
+    dispatch(closeModalLoadingAction());
+  };
 
   return (
     <>
@@ -57,14 +66,7 @@ const SideBar = () => {
                 <RiBarChart2Line className="text-primary" /> Analytic
               </Link>
             </li> */}
-            <li>
-              <Link
-                href=""
-                className="flex items-center text-artistfont gap-4 px-4 py-5 rounded-md font-newrocker border-b-[1px] border-artist/30 hover:bg-secondary-100 transition-colors"
-              >
-                <RiStarLine className="text-artist" /> Reseñas
-              </Link>
-            </li>
+
             <li>
               <Link
                 href="/a-dashboard/price"
@@ -89,13 +91,21 @@ const SideBar = () => {
                 <RiCalendarCheckLine className="text-artist" /> Calendario
               </Link>
             </li>
+            <li>
+              <Link
+                href="/a-dashboard/reviews/"
+                className="flex items-center gap-4 text-artistfont px-4 py-5 rounded-md font-newrocker border-b-[1px] border-artist/30 hover:bg-secondary-100 transition-colors"
+              >
+                <RiStarLine className="text-artist" /> Reseñas
+              </Link>
+            </li>
           </ul>
         </div>
         <nav>
           <Link
-            href=""
+            onClick={handleLogout}
+            href="/"
             className="flex items-center gap-4 px-4 text-artistfont py-5 text-[20px] rounded-md font-newrocker hover:bg-secondary-100 transition-colors"
-            // onClick={handleLogOut}
           >
             <RiLogoutCircleRLine className="text-artist" /> Cerrar sesión
           </Link>

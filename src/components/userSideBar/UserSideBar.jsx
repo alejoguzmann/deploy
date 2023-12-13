@@ -14,9 +14,19 @@ import {
   RiMenuFill,
   RiCloseFill,
 } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../app/redux/features/user/userActions";
+import { closeModalLoadingAction } from "../../app/redux/features/modalLoading/ModalLoadingActions";
 
 const UserSideBar = () => {
   const [showMenu, setShowMenu] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logOut());
+    dispatch(closeModalLoadingAction());
+  };
   return (
     <>
       <div
@@ -34,7 +44,8 @@ const UserSideBar = () => {
                 href="/user-dashboard/"
                 className="flex items-center rounded-md border-b-[1px] border-white/20 font-newrocker gap-4 px-4 py-5  hover:bg-secondary-100 transition-colors"
               >
-                <RiStore3Line className="text-primary " /> <p className="text-artistfont">Inicio</p>
+                <RiStore3Line className="text-primary " />{" "}
+                <p className="text-artistfont">Inicio</p>
               </Link>
             </li>
             <li>
@@ -50,25 +61,18 @@ const UserSideBar = () => {
 
             <li className="text-artistfont">
               <Link
-                href="/user-dashboard/misFavoritos"
-                className="flex items-center gap-4 px-4 py-5 rounded-md font-newrocker border-b-[1px] border-white/20 hover:bg-secondary-100 transition-colors"
-              >
-                <RiMessage3Line className="text-primary" /> Mis favoritos
-              </Link>
-            </li>
-            <li className="text-artistfont">
-              <Link
                 href="/user-dashboard/reservas"
                 className="flex items-center gap-4 px-4 py-5 rounded-md font-newrocker border-b-[1px] border-white/20 hover:bg-secondary-100 transition-colors"
               >
-                <RiCalendarCheckLine className="text-primary" /> Reservas
+                <RiCalendarCheckLine className="text-primary" /> Mis turnos
               </Link>
             </li>
           </ul>
         </div>
         <nav className="text-artistfont">
           <Link
-            href=""
+            onClick={handleLogout}
+            href="/"
             className="flex items-center gap-4 px-4 py-5 text-[20px] rounded-md font-newrocker hover:bg-secondary-100 transition-colors"
           >
             <RiLogoutCircleRLine className="text-primary" /> Cerrar sesión
