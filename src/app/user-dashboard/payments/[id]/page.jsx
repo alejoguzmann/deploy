@@ -10,7 +10,7 @@ export default function Reservas({ params }) {
   const [customer, setCustomer] = useState({});
   const [appointment, setAppointment] = useState({});
   const [tattooArtist, setTattooArtist] = useState({});
-  const urlBase = "http://localhost:3001";
+  const urlBase = "https://serverconnectink.up.railway.app";
 
   const getData = async () => {
     const appointmentResult = (await axios(`${urlBase}/appointments/${id}`))

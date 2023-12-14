@@ -28,7 +28,7 @@ const ModalCreate = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await axios.post("http://localhost:3001/publications", {
+        const response = await axios.post("https://serverconnectink.up.railway.app/publications", {
             image,
             description,
             tattooArtistId:artist.id,

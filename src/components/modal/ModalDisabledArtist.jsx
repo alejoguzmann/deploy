@@ -6,19 +6,21 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { closeModalDisabledArtistAction } from "../../app/redux/features/modalDisabledArtist/modalDisabledArtistAction";
-import { DeleteArtists } from "../../app/redux/features/artists/artistActions";
+import {
+  DeleteArtists,
+  getDisabledArtists,
+} from "../../app/redux/features/artists/artistActions";
 
 const ModalDisabledArtist = () => {
   const dispatch = useDispatch();
-  const URL_BASE = "http://localhost:3001";
+  const URL_BASE = "https://serverconnectink.up.railway.app";
   const [id, setId] = useState("");
   const { isOpen, data } = useSelector((state) => state.modalDisabledArtist);
 
   const handleClose = () => {
     dispatch(closeModalDisabledArtistAction());
+    dispatch(getDisabledArtists());
   };
-
-
 
   useEffect(() => {
     setId(data.id);
@@ -26,10 +28,14 @@ const ModalDisabledArtist = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    dispatch(getDisabledArtists());
     try {
       dispatch(DeleteArtists(data.id));
-      await axios.post("http://localhost:3001/nodemailer/restoreAccount", {email: data.email})
+      await axios.post("https://serverconnectink.up.railway.app/nodemailer/restoreAccount", {
+        email: data.email,
+      });
       dispatch(closeModalDisabledArtistAction());
+
       toast.success(`El artista se reestableció con éxito`, {
         className: "toastSuccess",
         position: toast.POSITION.BOTTOM_RIGHT,

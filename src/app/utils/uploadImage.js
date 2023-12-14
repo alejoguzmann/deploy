@@ -6,7 +6,7 @@ export const uploadImage = async (file) => {
   formData.append("file", file);
 
   const response = await axios.post(
-    "http://localhost:3000/api/upload",
+    "https://connectink.vercel.app//api/upload",
     formData,
     {
       headers: {

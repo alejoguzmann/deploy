@@ -11,7 +11,7 @@ import {
 } from "./artistsSlice";
 import axios from "axios";
 
-const URL_BASE = "http://localhost:3001";
+const URL_BASE = "https://serverconnectink.up.railway.app";
 
 export const getAllArtists = () => async (dispatch) => {
   const allArtists = (await axios(`${URL_BASE}/tattooArtists`)).data;
@@ -49,7 +49,6 @@ export const CleanArtist = () => async (dispatch) => {
 export const getDisabledArtists = () => async (dispatch) => {
   const response = await axios.get(`${URL_BASE}/tattooArtistsDisabled/`);
   const data = response.data;
-  //console.log(data,"DATITA")
   dispatch(disabledArtists(data));
 };
 
