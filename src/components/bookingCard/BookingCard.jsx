@@ -122,7 +122,7 @@ const BookingCard = ({
 
   return loaded ? (
     <div
-      className={`bg-secondary-100 flex items-center justify-center w-[60%] h-[300px]  rounded-lg
+      className={`bg-secondary-100 flex items-center justify-center w-[80%] h-auto p-4 rounded-lg
         `}
     >
       
