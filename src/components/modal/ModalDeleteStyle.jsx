@@ -12,7 +12,7 @@ import { closeModalDeleteStyleAction } from '../../app/redux/features/modalDelet
 const ModalDeleteStyle = () => {
     
     const dispatch = useDispatch();
-    const URL_BASE = "https://serverconnectink.up.railway.app"
+    const URL_BASE = "http://localhost:3001"
     const [id, setId] = useState('');
     const {isOpen,data} = useSelector((state) => state.modalDeleteStyle);
 
@@ -33,14 +33,14 @@ const ModalDeleteStyle = () => {
             className: "toastSuccess",
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
-            hideProgressBar: true,
+            hideProgressBar: false,
         });
         } catch (error) {
             toast.error(`Hubo un error al eliminar el estilo`, {
               className: "toastError",
               position: toast.POSITION.BOTTOM_RIGHT,
               autoClose: 3000,
-              hideProgressBar: true,
+              hideProgressBar: false,
             });
         }
         

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import BookingCard from "../../../components/bookingCard/BookingCard";
@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ModalDeleteAppointment from "../../../components/modal/ModalDeleteAppointment.jsx";
-import { getAllAppointments } from "../../redux/features/user/userActions";
+import { getAllAppointments, getUserById } from "../../redux/features/user/userActions";
 import Link from "next/link";
 import AdminCard from "../../../components/adminCard/AdminCard";
 import { getAllArtists } from "../../redux/features/artists/artistActions";
@@ -15,9 +15,10 @@ import Card from "../../../components/card/Card";
 
 export default function Reservas() {
   const user = useSelector((state) => state.user.logedInUser);
+  const fireBaseUser = useSelector((state) => state.user.fireBaseUser)
   const artist = useSelector((state) => state.artists.people.slice(0, 3));
 
-  const appointment = user.appointments;
+  const [appointment, setAppointment] = useState(user.appointments) ;
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -28,9 +29,16 @@ export default function Reservas() {
       router.replace("/");
     }
   }, []);
+
   useEffect(() => {
     dispatch(getAllArtists());
+    dispatch(getUserById(fireBaseUser.tokenId))
   }, []);
+
+  useEffect(() => {
+    setAppointment(user.appointments)
+  }, [user])
+
   const isOpenModalDeleteAppointment = useSelector(
     (state) => state.ModalDeleteAppointment?.isOpen
   );
@@ -40,7 +48,13 @@ export default function Reservas() {
   }, [isOpenModalDeleteAppointment]);
 
   return (
-    <div className="">
+
+    <div className="bg-secondary-900 w-full rounded-xl shadow-lg shadow-primary/50">
+      <div className="w-full p-7 ">
+        <h1 className="text-4xl text-artistfont font-rocksalt mb-8"> Mis turnos</h1>
+        <hr className="border-primary/20 border-[1px]"/>
+      </div>
+
       {appointment && appointment.length > 0 ? (
         [...user.appointments]
           .sort((a, b) => new Date(a.dateAndTime) - new Date(b.dateAndTime))
@@ -65,16 +79,19 @@ export default function Reservas() {
           )
       ) : (
         <div className="flex flex-col items-center">
-          <h5 className="text-artistfont">
-            {" "}
-            No tienes ninguna reserva aún. ¡Descubre increíbles artistas y sus
-            últimas obras!
-          </h5>
-          <Link href="/explore">
-            <button className="bg-primary text-white py-2 px-4 rounded mt-4">
-              Explorar Artistas
-            </button>
-          </Link>
+
+          <div className="flex flex-col py-8 px-3 items-center justify-center bg-secondary-100/40 shadow-inner shadow-primary/10 rounded-xl">
+            <h5 className="text-artistfont font-newrocker text-[22px] mb-8 ">
+              "No tienes ninguna reserva aún. ¡Descubre increíbles artistas y sus
+              últimas obras!"
+            </h5>
+            <Link href="/explore">
+              <button className="border-primary border-[1.5px] hover:border-primary/60 text-primary text-[17px] py-3 px-4 rounded-lg">
+                Explorar Artistas
+              </button>
+            </Link>
+          </div>
+
           <div className="scroll-fade flex justify-center items-center">
             <div>
               {artist?.map((filter) => (

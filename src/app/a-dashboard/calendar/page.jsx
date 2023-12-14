@@ -18,6 +18,9 @@ const Page = () => {
 
   const user = useSelector((state) => state.user);
   const [dayObj, setDayObj] = useState({});
+  let errorIndicator = false;
+  let errorIndicatorPost=false;
+  let actionIndicator = ""
   const router = useRouter();
   const days = [
     "Lunes",
@@ -33,12 +36,12 @@ const Page = () => {
     user.logedInUser.timeAvailabilities || []
   );
   const [newException, setNewException] = useState({ date: "" });
-  const URL_BASE = "https://serverconnectink.up.railway.app";
+  const URL_BASE = "http://localhost:3001";
   const [showHours, setShowHours] = useState({});
   const [moreTime, setMoreTime] = useState({});
   const [moreExceptionTime, setMoreExceptionTime] = useState(false);
 
-  console.log(user.logedInUser.userType);
+  //console.log(user.logedInUser.userType);
 
   useEffect(() => {
     // if (!user.userType) {
@@ -251,8 +254,10 @@ const Page = () => {
           };
           try {
             await axios.put(`${URL_BASE}/timeAvailabilities/${id}`, data);
+            actionIndicator = "update"
           } catch (error) {
             console.log(error);
+            errorIndicator = true;
           }
         } else if (initialHour && finalHour) {
           let data = {};
@@ -275,13 +280,39 @@ const Page = () => {
           }
           try {
             await axios.post(`${URL_BASE}/timeAvailabilities`, data);
-            
+            actionIndicator = "create"
           } catch (error) {
-            console.log(error);
-            
+            console.error(error)
+            errorIndicatorPost=true
           }
         }
+       
       }
+      if (!errorIndicator && actionIndicator=="update") {
+        toast.success(`Cambios guardados con éxito`, {
+          className: "toastSuccess",
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 3000,
+          hideProgressBar: false,
+        });} else if (!errorIndicatorPost && actionIndicator=="create") {
+          toast.success(`Cambios creados con éxito`, {
+            className: "toastSuccess",
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+            hideProgressBar: false,
+          });} else if (errorIndicatorPost && actionIndicator=="create") {
+            toast.error(`Error al registrar sus horarios`, {
+              className: "toastError",
+              position: toast.POSITION.BOTTOM_RIGHT,
+              autoClose: 3000,
+              hideProgressBar: false,
+            });} else if (errorIndicatorPost && actionIndicator=="update") {
+              toast.error(`Error al guardar sus cambios`, {
+                className: "toastError",
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000,
+                hideProgressBar: false,
+              });}
       dispatch(getUserById(user.fireBaseUser.tokenId));
     } catch (error) {
       notifyError("Error al guardar el horario:", error);
@@ -371,11 +402,11 @@ const Page = () => {
   };
 
   return (
-    <div className="bg-secondary-900 rounded w-[70%] shadow-lg shadow-artist">
+    <div className="bg-secondary-900 rounded w-full shadow-lg shadow-artist">
       <div className=" text-center">
-        <h3 className="font-rocksalt text-[26px] mt-8 mb-2 text-artistfont ">
-          Disponibilidad Horaria
-        </h3>
+      <div className=" w-full px-10 mb-10">
+        <h1 className="text-4xl font-rocksalt w-full py-10 text-left border-transparent border-b-artist/30 border-[1px]"> Disponibilidad Horaria</h1>
+      </div>
         <div className="flex items-center justify-center ">
           <hr className="mt-6 mb-6 w-[90%] border-artist/50 "></hr>
         </div>

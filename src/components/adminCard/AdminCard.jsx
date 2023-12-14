@@ -38,8 +38,8 @@ export default function AdminCard({
   };
 
   const handleBannear = () => {
-    dispatch(openModalDeleteArtistAction(id));
-    axios.post("https://serverconnectink.up.railway.app/nodemailer/deleteAccount", {email})
+    dispatch(openModalDeleteArtistAction({id, email}));
+    
   };
 
   useEffect(() => {
