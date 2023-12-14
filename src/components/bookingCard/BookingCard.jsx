@@ -23,6 +23,7 @@ import Link from "next/link";
 import { openModalDeleteAppointmentAction } from "../../app/redux/features/modalDeleteAppointment/modalDeleteAppointmentAction";
 import { useRouter } from "next/navigation";
 import { notifyError } from "../../components/notifyError/NotifyError";
+import { getUserById } from "../../app/redux/features/user/userActions";
 
 const BookingCard = ({
   paymentStatus,
@@ -40,6 +41,7 @@ const BookingCard = ({
     return src;
   };
   const user = useSelector((state) => state.user.logedInUser);
+  const fireBaseUser = useSelector((state) => state.user.fireBaseUser);
   const router = useRouter();
   const dispatch = useDispatch();
   let date = new Date(dateAndTime);
@@ -63,7 +65,7 @@ const BookingCard = ({
       try {
         const resp = (
           await axios.get(
-            `https://serverconnectink.up.railway.app/tattooArtists/${tattooArtistId}`
+            `http://localhost:3001/tattooArtists/${tattooArtistId}`
           )
         ).data;
         setResponse(resp);
@@ -89,7 +91,7 @@ const BookingCard = ({
     dispatch(openModalDeleteAppointmentAction(id));
 
     const artist = (
-      await axios(`https://serverconnectink.up.railway.app/tattooArtists/${tattooArtistId}`)
+      await axios(`http://localhost:3001/tattooArtists/${tattooArtistId}`)
     ).data;
 
     const year = new Date(dateAndTime).getFullYear();
@@ -107,7 +109,9 @@ const BookingCard = ({
       depositPrice,
     };
 
-    await axios.post("https://serverconnectink.up.railway.app/nodemailer/cancelDate", data);
+    await axios.post("http://localhost:3001/nodemailer/cancelDate", data);
+
+    dispatch(getUserById(fireBaseUser.tokenId))
   };
 
 

@@ -3,7 +3,7 @@
 import { RiEdit2Line } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
-import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiSave3Fill  } from "react-icons/ri";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { bringUserInformation } from "../../../app/redux/features/user/userActions";
@@ -12,16 +12,25 @@ import { getAuth, updatePassword } from "firebase/auth";
 import { notifyError } from "../../../components/notifyError/NotifyError";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import { uploadImage } from "../../utils/uploadImage";
+import { CldUploadWidget } from "next-cloudinary";
+import {
+  validateName,
+  validatePassword,
+  comparePasswords,
+} from "./validations.js";
 
 const UProfile = () => {
   const user = useSelector((state) => state.user.logedInUser);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [initialData, setInitialData] = useState({});
-  const [imagePreview, setImagePreview] = useState(user.image);
+  const [image, setImage] = useState(null);
+  const [nameError, setNameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   useEffect(() => {
     if (!user.userType) {
@@ -83,13 +92,16 @@ const UProfile = () => {
       }
 
       const response = await axios.put(
-        `https://serverconnectink.up.railway.app/customers/${user.id}`,
-        formData
+        `http://localhost:3001/customers/${user.id}`,
+        updatedFields
       );
 
+      setImage(null);
+
       if (response.status === 200) {
-        dispatch(bringUserInformation(formData));
+        dispatch(bringUserInformation(updatedFields));
         console.log("Datos actualizados con éxito");
+
         setFormData({ ...formData, password: "" });
         setConfirmPassword("");
       }
@@ -104,65 +116,69 @@ const UProfile = () => {
       notifyError("Error al actualizar datos", error);
     }
   };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = async (event) => {
-    const selectedFile = event.target.files[0];
+  const handleNameChange = (e) => {
+    const newValue = e.target.value;
+    setFormData({ ...formData, fullName: newValue });
+    const errorMessage = validateName(newValue);
+    setNameError(errorMessage);
+    setIsNameValid(!errorMessage);
+  };
 
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(selectedFile);
-      try {
-        const imageUrl = await uploadImage(selectedFile);
+  const handlePasswordChange = (e) => {
+    const newValue = e.target.value;
+    setFormData({ ...formData, password: newValue });
+    const errorMessage = validatePassword(newValue);
+    setPasswordError(errorMessage);
+    setIsPasswordValid(!errorMessage);
+    setArePasswordsEqual(comparePasswords(newValue, confirmPassword));
+  };
 
-        setFormData({ ...formData, image: imageUrl });
-      } catch (error) {
-        console.error("Error al subir la imagen:", error);
-
-        notifyError("Error al subir la imagen");
-      }
-    }
+  const handleConfirmPasswordChange = (e) => {
+    const newValue = e.target.value;
+    setConfirmPassword(newValue);
+    const errorMessage = comparePasswords(formData.password, newValue);
+    setConfirmPasswordError(errorMessage);
+    setArePasswordsEqual(!errorMessage);
   };
 
   return (
-    <div className="bg-secondary-100 p-8 rounded-xl w-full">
+    <div className="bg-secondary-900 p-8 rounded-xl w-full shadow-lg shadow-primary/50">
       <h1 className="text-4xl text-artistfont font-rocksalt"> Mi perfil</h1>
-      <hr className="my-8 border-gray-500" />
+      <hr className="my-8 border-primary/30" />
       <form onSubmit={handleUpdate}>
         <div className="flex items-center mb-6">
-          <div className="w-1/4 ">
-            <Image
-              unoptimized
-              src={imagePreview || user.image}
-              loader={imageLoader}
-              width={100}
-              height={100}
-              alt={`${user.fullName} profile pic`}
-              className="rounded-full"
-            />
-            <p>vista previa</p>
-          </div>
-
           <div className="flex-1">
             <div className="relative mb-2">
-              <input
-                type="file"
-                id="avatar"
-                className="hidden"
-                onChange={handleFileChange}
-                accept="image/png, image/jpeg"
-              />
+              <CldUploadWidget
+                uploadPreset="cloudinary-upload-images-connectInk"
+                onUpload={(result) => {
+                  setFormData({ ...formData, image: result.info.secure_url });
+                  setImage(result.info.secure_url);
+                }}
+              >
+                {({ open }) => {
+                  return (
+                    <button
+                      type="button"
+                      className="absolute bg-secondary-900 p-2 left-24 -top-2 rounded-full cursor-pointer hover:bg-secondary-100"
+                      onClick={() => open()}
+                    >
+                      <RiEdit2Line />
+                    </button>
+                  );
+                }}
+              </CldUploadWidget>
 
               {user.image && (
                 <div>
                   <Image
                     unoptimized
-                    src={imagePreview}
+                    src={user.image}
                     loader={imageLoader}
                     width={80}
                     height={80}
@@ -171,12 +187,31 @@ const UProfile = () => {
                 </div>
               )}
 
-              <label
-                htmlFor="avatar"
-                className="absolute bg-secondary-900 p-2 left-24 -top-2 rounded-full cursor-pointer hover:bg-secondary-100"
-              >
-                <RiEdit2Line />
-              </label>
+              {image && (
+                <div>
+                  <p>Nueva imagen de perfil:</p>
+                  <Image
+                    src={image}
+                    loader={imageLoader}
+                    unoptimized
+                    alt="tattoo image"
+                    height={80}
+                    width={80}
+                  />
+                </div>
+              )}
+              {image && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({ ...formData, image: null });
+                    setImage(null);
+                  }}
+                  className="bg-red-500 text-white p-2 rounded w-[20%] text-[15px] mt-3 "
+                >
+                  Delete Image
+                </button>
+              )}
             </div>
             <p className="text-gray-500 text-sm"></p>
           </div>
@@ -187,15 +222,18 @@ const UProfile = () => {
               Nombre Completo: <span className="text-red-500">*</span>
             </p>
           </div>
-          <div className="flex-1 flex items-center gap-4">
-            <div className="w-1/2">
+          <div className=" w-1/2 flex items-center gap-4">
+            <div className="w-full">
               <input
                 name="fullName"
                 type="text"
                 value={formData.fullName}
-                onChange={handleChange}
+
+                onChange={handleNameChange}
                 className="w-full py-3 px-4 outline-none rounded-lg bg-secondary-900 text-artistfont cursor-default"
+
               />
+              {nameError && <p className="text-red-500">{nameError}</p>}
             </div>
           </div>
         </div>
@@ -206,14 +244,15 @@ const UProfile = () => {
               Email: <span className="text-red-500">*</span>
             </p>
           </div>
-          <div className="flex-1 flex items-center gap-4">
-            <div className="w-1/2">
+          <div className=" w-1/2 flex items-center gap-4">
+            <div className="w-full">
               <input
                 name="email"
                 type="text"
+                readOnly
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full text-artistfont py-3 px-4 outline-none rounded-lg bg-secondary-900 cursor-default"
+                className="w-full text-artistfont py-3 px-4 outline-none rounded-lg bg-secondary-100 cursor-default"
               />
             </div>
           </div>
@@ -223,41 +262,64 @@ const UProfile = () => {
           <div className="w-1/4">
             <p className="text-artistfont">Nueva Contraseña:</p>
           </div>
-          <div className="flex-1">
+
+          <div className=" relative w-1/2">
+
             <input
               name="password"
               type={showPassword ? "text" : "password"}
               value={formData.password}
-              onChange={handleChange}
-              className="w-[50%] py-3 px-4 outline-none rounded-lg bg-secondary-900 cursor-default"
-            />
 
-            <span onClick={() => setShowPassword(!showPassword)}>
+              onChange={handlePasswordChange}
+              className="w-[calc(50%-2rem)] py-3 px-4 outline-none rounded-lg bg-secondary-900 cursor-default"
+            />
+            {passwordError && <p className="text-red-500">{passwordError}</p>}
+            <span
+              className="ml-4 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+
               {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center mb-4">
+        <div className="flex items-center mb-8">
           <div className="w-1/4">
             <p className="text-artistfont">Confirmar Nueva Contraseña:</p>
           </div>
-          <div className="flex-1">
+          <div className=" w-1/2 relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-[50%] py-3 px-4 outline-none rounded-lg bg-secondary-900 cursor-default text-artistfont"
+
+              onChange={handleConfirmPasswordChange}
+              className="w-[calc(50%-2rem)] py-3 px-4 outline-none rounded-lg bg-secondary-900 cursor-default text-artistfont"
             />
+            {confirmPasswordError && (
+              <p className="text-red-500">{confirmPasswordError}</p>
+            )}
+
+            <span
+              className="ml-4 cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+
+            </span>
           </div>
         </div>
-        <div className=" mb-2 w-full flex items-center  mx-auto">
+        <div className=" mb-2 w-full flex items-center justify-center">
           <button
-            className="mx-auto mt-6 border-[1px] border-primary/50 hover:border-primary w-[250px] rounded px-2 py-3 "
+            className="text-black border-[1px] flex gap-x-1 items-center border-primary/50 hover:border-primary text-[17px] bg-primary rounded-lg px-4 py-3 "
+
             type="submit"
+            disabled={nameError || passwordError || confirmPasswordError}
           >
-            {" "}
-            GUARDAR CAMBIOS
+
+            <RiSave3Fill />
+            Guardar cambios
+
           </button>
         </div>
       </form>

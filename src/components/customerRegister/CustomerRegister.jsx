@@ -1,7 +1,9 @@
+"use client"
+
 import React, { useEffect, useState } from "react";
-import { uploadImage } from "../../app/utils/uploadImage";
 import { Formik, Form, Field, ErrorMessage, useField } from "formik";
 import { notifyError } from "../../components/notifyError/NotifyError";
+import Image from "next/image";
 
 import { validationSchemaClient } from "../customerRegister/validationSchemaCliente";
 import { emailSignUp } from "../../app/utils/emailSignUp";
@@ -18,19 +20,25 @@ import {
   RiLock2Line,
   RiUserLine,
   RiPhoneFill,
+  RiUpload2Fill,
   RiLockLine,
   RiEyeLine,
   RiEyeOffLine,
   RiGoogleFill,
 } from "react-icons/ri";
 import { auth } from "../../firebase";
+import { CldUploadWidget } from "next-cloudinary";
 
 const CustomerRegister = () => {
-  const urlBase = "https://serverconnectink.up.railway.app";
+  const urlBase = "http://localhost:3001";
   const router = useRouter();
   const dispatch = useDispatch();
   const userInformation = useSelector((state) => state.user.fireBaseUser);
   const [loaded, setLoaded] = useState(false);
+  const [image, setImage] = useState(userInformation?.image || null)
+  const imageLoader = ({src}) => {
+    return src
+  }
 
   useEffect(() => {
     setLoaded(true);
@@ -45,7 +53,7 @@ const CustomerRegister = () => {
           {children}
         </label>
         {meta.touched && meta.error ? (
-          <div className="error">{meta.error}</div>
+          <div className="error text-red-500">{meta.error}</div>
         ) : null}
       </div>
     );
@@ -59,7 +67,7 @@ const CustomerRegister = () => {
           userName: userInformation?.userName ? true : false,
           email: userInformation?.email || "",
           mobile: "",
-          image: "",
+          image: userInformation?.image || null,
           password: "",
           passwordConfirm: "",
           tokenId: userInformation?.tokenId || "",
@@ -68,13 +76,8 @@ const CustomerRegister = () => {
         validationSchema={validationSchemaClient}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            if (values.image && typeof values.image === "object") {
-              const imageUrl = await uploadImage(values.image);
-              values.image = imageUrl;
-            } else {
-              values.image =
-                userInformation?.image ||
-                "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg";
+            if (!values.image) {
+              values.image = userInformation?.image || "https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg";
             }
 
             if (!values.userName) {
@@ -121,17 +124,23 @@ const CustomerRegister = () => {
       >
         {({ isSubmitting, isValid, setFieldValue, dirty, values }) => (
           <Form className="flex flex-col shadow-lg p-5 max-w-xl mx-auto">
+
             <div className="mb-4">
-              <label htmlFor="image" className="font-bold">
+              <label htmlFor="image" className="font-bold mb-3">
                 Imagen de Perfil
               </label>
+              <label htmlFor='customerImage' className='mt-3 w-1/2 font-newrocker  flex gap-x-1.5 items-center mb-1 text-[17px] px-4 py-3 cursor-pointer bg-secondary-900/70 text-white border-white border-[1px] rounded-lg hover:shadow-lg hover:bg-secondary-900 hover:text-primary hover:border-primary'>
+                 <RiUpload2Fill/>
+                 Subir imagen
+              </label> 
               <input
                 type="file"
+                id="customerImage"
                 name="image"
                 onChange={(event) => {
                   setFieldValue("image", event.currentTarget.files[0]);
                 }}
-                className="p-2 mb-3 shadow-md block w-full"
+                className="p-2 mb-3 shadow-md  w-full hidden"
                 accept="image/png, image/jpeg"
               />
               {values.image && (
@@ -144,6 +153,7 @@ const CustomerRegister = () => {
                 </button>
               )}
             </div>
+
 
             <div className="relative w-full">
               <RiUserLine className="absolute left-2 top-4 text-white z-30" />
@@ -231,15 +241,15 @@ const CustomerRegister = () => {
                 Acepto los Términos y Condiciones
               </MyCheckbox>
             </label>
-            <ErrorMessage
+            {/* <ErrorMessage
               name="acceptedTerms"
               component="div"
               className="text-red-500 text-sm"
-            />
+            /> */}
             <button
               type="submit"
               disabled={isSubmitting || !isValid || !dirty}
-              className="p-2 mt-5 bg-primary text-white rounded hover:bg-primary/80 disabled:bg-blue-300"
+              className="p-2 mt-5 bg-primary text-white rounded hover:bg-primary disabled:bg-primary/30 w-full"
             >
               Registrarme
             </button>

@@ -10,7 +10,7 @@ import { DeleteArtists } from "../../app/redux/features/artists/artistActions";
 
 const ModalDisabledArtist = () => {
   const dispatch = useDispatch();
-  const URL_BASE = "https://serverconnectink.up.railway.app";
+  const URL_BASE = "http://localhost:3001";
   const [id, setId] = useState("");
   const { isOpen, data } = useSelector((state) => state.modalDisabledArtist);
 
@@ -18,27 +18,30 @@ const ModalDisabledArtist = () => {
     dispatch(closeModalDisabledArtistAction());
   };
 
+
+
   useEffect(() => {
-    setId(data);
+    setId(data.id);
   }, [id]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      dispatch(DeleteArtists(id));
+      dispatch(DeleteArtists(data.id));
+      await axios.post("http://localhost:3001/nodemailer/restoreAccount", {email: data.email})
       dispatch(closeModalDisabledArtistAction());
       toast.success(`El artista se reestableció con éxito`, {
         className: "toastSuccess",
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: 3000,
-        hideProgressBar: true,
+        hideProgressBar: false,
       });
     } catch (error) {
       toast.error(`Hubo un error al reestablecer el artista`, {
         className: "toastError",
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: 3000,
-        hideProgressBar: true,
+        hideProgressBar: false,
       });
     }
   };

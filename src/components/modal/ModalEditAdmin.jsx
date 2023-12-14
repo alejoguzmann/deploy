@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation'
 
 const ModalEditAdmin = () => {
-  const URL_BASE = "https://serverconnectink.up.railway.app"
+  const URL_BASE = "http://localhost:3001"
   const router = useRouter();
   const dispatch = useDispatch();
   const { isOpen, data } = useSelector((state) => state.modalEdit);
@@ -42,14 +42,14 @@ const ModalEditAdmin = () => {
           className: "toastSuccess",
           position: toast.POSITION.BOTTOM_RIGHT,
           autoClose: 3000,
-          hideProgressBar: true,
+          hideProgressBar: false,
         });
     } catch (error) {
       toast.error(`Hubo un error al editar la publicación`, {
         className: "toastError",
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: 3000,
-        hideProgressBar: true,
+        hideProgressBar: false,
       });
     }
   }

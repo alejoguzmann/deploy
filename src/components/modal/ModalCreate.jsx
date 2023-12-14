@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RiUpload2Fill, RiMoreFill, RiEmotionHappyLine, RiCloseFill, RiCheckFill } from "react-icons/ri";
 import axios from "axios"
-import { uploadImage } from '../../app/utils/uploadImage';
 import Image from 'next/image';
 import {RiEdit2Line} from "react-icons/ri"
 import { closeModalCreateAction } from '../../app/redux/features/modalCreate/modalCreateAction';
@@ -19,13 +18,6 @@ const ModalCreate = () => {
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const handleImageChange = async (event) => {
-    setLoading(true);
-    const imageUrl = await uploadImage(event.target.files[0])
-    setImage(imageUrl)
-    setLoading(false);
-  };
   
   const handleClose = () => {
     dispatch(closeModalCreateAction());
@@ -45,7 +37,7 @@ const ModalCreate = () => {
             className:'toastSuccess',
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
-            hideProgressBar: true,
+            hideProgressBar: false,
          });
         dispatch(closeModalCreateAction());
 
@@ -54,7 +46,7 @@ const ModalCreate = () => {
             className:'toastError',
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
-            hideProgressBar: true,
+            hideProgressBar: false,
          });
     }
 

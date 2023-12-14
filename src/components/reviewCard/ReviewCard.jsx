@@ -13,7 +13,7 @@ const ReviewCard = ({customerId, comment, image, rating}) => {
 
 
     const getCustomerInfo = async () => {
-        const response = await axios(`https://serverconnectink.up.railway.app/customers/${customerId}`)
+        const response = await axios(`http://localhost:3001/customers/${customerId}`)
         setCustomer(response.data)
     }
 

@@ -6,7 +6,7 @@ import axios from "axios";
 const ArtistReview = ({comment, customerId, rating}) => {
 
     const user = useSelector((state) => state.user.logedInUser);
-    const URL_BASE = "https://serverconnectink.up.railway.app";
+    const URL_BASE = "http://localhost:3001";
     const [customer, setCustomer]= useState({})
 
     useEffect(()=>{
