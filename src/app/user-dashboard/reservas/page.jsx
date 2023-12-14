@@ -59,7 +59,7 @@ export default function Reservas() {
           .map(
             (tur) =>
               tur.paymentStatus && (
-                <div key={tur.id} className="h-full mt-6 flex items-center justify-center">
+                <div key={tur.id} className="mt-6 flex items-center justify-center">
                   <BookingCard
                     id={tur.id}
                     bodyPlace={tur.bodyPlace}
