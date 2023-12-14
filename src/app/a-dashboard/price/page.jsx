@@ -154,7 +154,7 @@ const Price = () => {
 
   const updatePrice = async (data) => {
     try {
-      await axios.put(`${URL_BASE}/priceRanges/${data.priceRangeId}`, data);
+      await axios.put(`${URL_BASE}/priceRange/${data.priceRangeId}`, data);
     } catch (error) {
       toast.error(`Error al actualizar precios`, {
         className: "toastError",
@@ -167,7 +167,7 @@ const Price = () => {
 
   const createPrice = async (data) => {
     try {
-      const response = await axios.post(`${URL_BASE}/priceRanges`, data);
+      const response = await axios.post(`${URL_BASE}/priceRange`, data);
     } catch (error) {
       console.error(error);
       errorIndicator = true;
