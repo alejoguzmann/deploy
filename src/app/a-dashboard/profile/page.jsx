@@ -185,6 +185,7 @@ const Profile = () => {
                   setFormData({ ...formData, image: result.info.secure_url });
                   setImage(result.info.secure_url);
                 }}
+                onError={(error) => console.log(error)}
               >
                 {({ open }) => {
                   return (
