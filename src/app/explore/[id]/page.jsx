@@ -1,5 +1,6 @@
 "use client";
 
+// Importaciones
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../../../components/nav/Nav";

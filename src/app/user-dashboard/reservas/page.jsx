@@ -7,10 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ModalDeleteAppointment from "../../../components/modal/ModalDeleteAppointment.jsx";
-import {
-  getAllAppointments,
-  getUserById,
-} from "../../redux/features/user/userActions";
+import { getAllAppointments, getUserById } from "../../redux/features/user/userActions";
 import Link from "next/link";
 import AdminCard from "../../../components/adminCard/AdminCard";
 import { getAllArtists } from "../../redux/features/artists/artistActions";
@@ -18,11 +15,10 @@ import Card from "../../../components/card/Card";
 
 export default function Reservas() {
   const user = useSelector((state) => state.user.logedInUser);
-  const fireBaseUser = useSelector((state) => state.user.fireBaseUser);
+  const fireBaseUser = useSelector((state) => state.user.fireBaseUser)
   const artist = useSelector((state) => state.artists.people.slice(0, 3));
-  const [loaded, setLoaded] = useState(false);
 
-  const [appointment, setAppointment] = useState(user.appointments);
+  const [appointment, setAppointment] = useState(user.appointments) ;
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -32,17 +28,16 @@ export default function Reservas() {
     } else if (user.userType !== "customer") {
       router.replace("/");
     }
-    setLoaded(true);
   }, []);
 
   useEffect(() => {
     dispatch(getAllArtists());
-    dispatch(getUserById(fireBaseUser.tokenId));
+    dispatch(getUserById(fireBaseUser.tokenId))
   }, []);
 
   useEffect(() => {
-    setAppointment(user.appointments);
-  }, [user]);
+    setAppointment(user.appointments)
+  }, [user])
 
   const isOpenModalDeleteAppointment = useSelector(
     (state) => state.ModalDeleteAppointment?.isOpen
@@ -52,22 +47,19 @@ export default function Reservas() {
     dispatch(getAllAppointments(user.id));
   }, [isOpenModalDeleteAppointment]);
 
-  return loaded ? (
+  return (
+
     <div className="bg-secondary-900 w-full rounded-xl shadow-lg shadow-primary/50">
       <div className="w-full p-7 ">
-        <h1 className="text-4xl text-artistfont font-rocksalt mb-8">
-          {" "}
-          Mis turnos
-        </h1>
-        <hr className="border-primary/20 border-[1px]" />
-      </div>
-      {appointment && appointment.length > 0 ? (
-        [...appointment]
+        <h1 className="text-4xl text-artistfont font-rocksalt mb-8"> Mis turnos</h1>
+        <hr className="border-primary/20 border-[1px]"/>
+         {appointment && appointment.length > 0 ? (
+        [...user.appointments]
           .sort((a, b) => new Date(a.dateAndTime) - new Date(b.dateAndTime))
           .map(
-            (tur) => {
-              return tur.paymentStatus ? (
-                <div key={tur.id} className="mt-[50px]">
+            (tur) =>
+              tur.paymentStatus && (
+                <div key={tur.id} className="h-full mt-6 flex items-center justify-center">
                   <BookingCard
                     id={tur.id}
                     bodyPlace={tur.bodyPlace}
@@ -81,15 +73,15 @@ export default function Reservas() {
                     paymentStatus={tur.paymentStatus}
                   />
                 </div>
-              ) : <></>
-            }
+              )
           )
       ) : (
         <div className="flex flex-col items-center">
+
           <div className="flex flex-col py-8 px-3 items-center justify-center bg-secondary-100/40 shadow-inner shadow-primary/10 rounded-xl">
             <h5 className="text-artistfont font-newrocker text-[22px] mb-8 ">
-              "No tienes ninguna reserva aún. ¡Descubre increíbles artistas y
-              sus últimas obras!"
+              "No tienes ninguna reserva aún. ¡Descubre increíbles artistas y sus
+              últimas obras!"
             </h5>
             <Link href="/explore">
               <button className="border-primary border-[1.5px] hover:border-primary/60 text-primary text-[17px] py-3 px-4 rounded-lg">
@@ -120,8 +112,9 @@ export default function Reservas() {
           </div>
         </div>
       )}
+      </div>
+
+     
     </div>
-  ) : (
-    <></>
   );
 }
