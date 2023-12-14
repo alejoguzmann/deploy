@@ -6,7 +6,7 @@ import Image from "next/image";
 import { RiEyeLine, RiEyeOffLine, RiSave3Fill  } from "react-icons/ri";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { bringUserInformation } from "../../../app/redux/features/user/userActions";
+import { bringUserInformation, getUserById } from "../../../app/redux/features/user/userActions";
 import axios from "axios";
 import { getAuth, updatePassword } from "firebase/auth";
 import { notifyError } from "../../../components/notifyError/NotifyError";
@@ -95,6 +95,7 @@ const UProfile = () => {
         `https://serverconnectink.up.railway.app/customers/${user.id}`,
         updatedFields
       );
+      dispatch(getUserById(firebaseUser.uid))
 
       setImage(null);
 
