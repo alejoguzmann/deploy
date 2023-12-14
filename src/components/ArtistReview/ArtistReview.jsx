@@ -7,7 +7,7 @@ import StarReviews from "../starreviews/StarReviews";
 const ArtistReview = ({comment, customerId, rating}) => {
 
     const user = useSelector((state) => state.user.logedInUser);
-    const URL_BASE = "http://localhost:3001";
+    const URL_BASE = "https://serverconnectink.up.railway.app";
     const [customer, setCustomer]= useState({})
 
     useEffect(()=>{

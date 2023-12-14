@@ -67,7 +67,7 @@ const BookingCard = ({
       try {
         const resp = (
           await axios.get(
-            `http://localhost:3001/tattooArtists/${tattooArtistId}`
+            `https://serverconnectink.up.railway.app/tattooArtists/${tattooArtistId}`
           )
         ).data;
         setResponse(resp);
@@ -97,7 +97,7 @@ const BookingCard = ({
     dispatch(openModalDeleteAppointmentAction(id));
 
     const artist = (
-      await axios(`http://localhost:3001/tattooArtists/${tattooArtistId}`)
+      await axios(`https://serverconnectink.up.railway.app/tattooArtists/${tattooArtistId}`)
     ).data;
 
     const year = new Date(dateAndTime).getFullYear();
@@ -115,7 +115,7 @@ const BookingCard = ({
       depositPrice,
     };
 
-    await axios.post("http://localhost:3001/nodemailer/cancelDate", data);
+    await axios.post("https://serverconnectink.up.railway.app/nodemailer/cancelDate", data);
 
     dispatch(getUserById(fireBaseUser.tokenId));
   };

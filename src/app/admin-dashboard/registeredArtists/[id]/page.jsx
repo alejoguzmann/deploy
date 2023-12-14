@@ -27,7 +27,7 @@ const RegArtistById = ({ params }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/tattooArtists/${params.id}`)
+      .get(`https://serverconnectink.up.railway.app/tattooArtists/${params.id}`)
       .then((response) => {
         setArtist(response.data);
       });

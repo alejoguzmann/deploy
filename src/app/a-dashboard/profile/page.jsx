@@ -119,7 +119,7 @@ const Profile = () => {
       const dataToUpdate = { ...updatedFields, image: formData.image };
 
       const response = await axios.put(
-        `http://localhost:3001/tattooArtists/${user.id}`,
+        `https://serverconnectink.up.railway.app/tattooArtists/${user.id}`,
         dataToUpdate
       );
       console.log(dataToUpdate);

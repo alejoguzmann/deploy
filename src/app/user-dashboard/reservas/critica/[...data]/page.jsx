@@ -69,7 +69,7 @@ const Critica = ({ params }) => {
                 tattooArtistId,
               };
               const response = await axios.post(
-                "http://localhost:3001/reviews",
+                "https://serverconnectink.up.railway.app/reviews",
                 data
               );
               setSent(true);

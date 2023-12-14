@@ -54,7 +54,7 @@ const ArtistBookingCard = ({id, bodyPlace, description, duration, image, size, d
     const artistId = async () => {
       try {
         const resp = (
-          await axios.get(`http://localhost:3001/customers/${CustomerId}`)
+          await axios.get(`https://serverconnectink.up.railway.app/customers/${CustomerId}`)
         ).data;
         setResponse(resp);
       } catch (error) {
@@ -69,7 +69,7 @@ const ArtistBookingCard = ({id, bodyPlace, description, duration, image, size, d
     dispatch(openModalDeleteAppointmentAction(id));
 
     const customer = (
-      await axios(`http://localhost:3001/customers/${CustomerId}`)
+      await axios(`https://serverconnectink.up.railway.app/customers/${CustomerId}`)
     ).data;
 
     const year = new Date(dateAndTime).getFullYear();
@@ -87,7 +87,7 @@ const ArtistBookingCard = ({id, bodyPlace, description, duration, image, size, d
       depositPrice,
     };
 
-    await axios.post("http://localhost:3001/nodemailer/cancelDate", data);
+    await axios.post("https://serverconnectink.up.railway.app/nodemailer/cancelDate", data);
     dispatch(getUserById(fireBaseUser.tokenId))
   };
 

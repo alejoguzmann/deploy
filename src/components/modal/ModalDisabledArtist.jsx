@@ -13,7 +13,7 @@ import {
 
 const ModalDisabledArtist = () => {
   const dispatch = useDispatch();
-  const URL_BASE = "http://localhost:3001";
+  const URL_BASE = "https://serverconnectink.up.railway.app";
   const [id, setId] = useState("");
   const { isOpen, data } = useSelector((state) => state.modalDisabledArtist);
 
@@ -31,7 +31,7 @@ const ModalDisabledArtist = () => {
     dispatch(getDisabledArtists());
     try {
       dispatch(DeleteArtists(data.id));
-      await axios.post("http://localhost:3001/nodemailer/restoreAccount", {
+      await axios.post("https://serverconnectink.up.railway.app/nodemailer/restoreAccount", {
         email: data.email,
       });
       dispatch(closeModalDisabledArtistAction());
