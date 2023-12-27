@@ -94,7 +94,7 @@ const ArtistBookingCard = ({
       depositPrice,
     };
 
-    await axios.post("http://localhost:3001/nodemailer/cancelDate", data);
+    await axios.post("https://serverconnectink.up.railway.app/nodemailer/cancelDate", data);
     dispatch(getUserById(fireBaseUser.tokenId));
   };
 
