@@ -32,6 +32,7 @@ import {
   RiEyeLine,
   RiEyeOffLine,
   RiGoogleFill,
+  RiBankLine
 } from "react-icons/ri";
 
 const TattoArtistRegister = () => {
